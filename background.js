@@ -99,17 +99,15 @@ chrome.browserAction.onClicked.addListener(function() {
 
 
 chrome.tabs.onUpdated.addListener( function (tabId, changeInfo, tab) {
-    var saveIt;
     chrome.tabs.sendMessage(tab.id, {text: 'report_back'}, doStuffWithDom);
-    
 });
 
 function doStuffWithDom(domContent) {
     console.log(domContent);
-    if (domContent > 10) {
+    if (domContent > 100) {
         console.log("modifying display");
         setState(StateEnum.DISPLAY);
-    } else if (domContent < 10) {
+    } else if (domContent < 100) {
         setState(StateEnum.DISABLED);
     }
 }
