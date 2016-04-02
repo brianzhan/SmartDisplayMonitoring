@@ -5,6 +5,9 @@
 /**
  * States that the extension can be in.
  */
+
+var saveResponse;
+
 var StateEnum = {
   DISABLED: 'disabled',
   DISPLAY: 'display',
@@ -96,16 +99,24 @@ chrome.browserAction.onClicked.addListener(function() {
 
 
 chrome.tabs.onUpdated.addListener( function (tabId, changeInfo, tab) {
+    var saveIt;
     chrome.tabs.sendMessage(tab.id, {text: 'report_back'}, doStuffWithDom);
-
+    
 });
 
 function doStuffWithDom(domContent) {
-    console.log("the following is DOM ", domContent);
+    console.log(domContent);
+    if (domContent > 10) {
+        console.log("modifying display");
+        setState(StateEnum.DISPLAY);
+    } else if (domContent < 10) {
+        setState(StateEnum.DISABLED);
+    }
 }
 
+
 /*
-      
+      f
 chrome.tabs.onUpdated.addListener( function (tabId, changeInfo, tab) {
   console.log("update called");
   chrome.tabs.getSelected(null, function(tab) {
