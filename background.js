@@ -96,22 +96,36 @@ chrome.browserAction.onClicked.addListener(function() {
 
 
 chrome.tabs.onUpdated.addListener( function (tabId, changeInfo, tab) {
+    chrome.tabs.sendMessage(tab.id, {text: 'report_back'}, doStuffWithDom);
+
+});
+
+function doStuffWithDom(domContent) {
+    console.log("the following is DOM ", domContent);
+}
+
+/*
+      
+chrome.tabs.onUpdated.addListener( function (tabId, changeInfo, tab) {
   console.log("update called");
-  if (changeInfo.status == 'complete' && tab.active) {
-    console.log("update listener called");
-    if (document.body.innerText.split(' ').length > 10) {
-        setState(StateEnum.DISPLAY);
-        console.log("update called display");
+  chrome.tabs.getSelected(null, function(tab) {
+    if (changeInfo.status == 'complete' && tab.active) {
+        console.log("update listener called");
+        var wordCount = document.body.innerText.split(' ').length
+        if (wordCount > 10) {
+            setState(StateEnum.DISPLAY);
+            console.log("update called display");
+        }
+        else {
+            setState(StateEnum.DISABLED);
+            console.log("update called disable with ", wordCount, " which is ", document.body.innerText.split(' ').length >10 );
+            console.log ("body is :", document.body.innerText);
+        }
     }
-    else {
-        setState(StateEnum.DISABLED);
-        console.log("update called disable with ", document.body.innerText.split(' ').length, " which ", document.body.innerText.split(' ').length >10 );
-    }
-  }
-  
-})
+  });
+});*/
 
-
+/*
 chrome.tabs.onActivated.addListener(function(activeInfo) {
   console.log("activation called");
   if (tab.active) {
@@ -125,7 +139,7 @@ chrome.tabs.onActivated.addListener(function(activeInfo) {
         }      
   }
 
-}); 
+}); */
 
 
 function getText(){
