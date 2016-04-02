@@ -20,7 +20,6 @@ var STATE_KEY = 'state';
  * {chrome.power}?
  */
 var useOldApi = !chrome.power;
-console.log(useOldApi);
 
 /**
  * Loads the locally-saved state asynchronously.
@@ -80,19 +79,60 @@ function setState(newState) {
 }
 
 chrome.browserAction.onClicked.addListener(function() {
-  loadSavedState(function(state) {
+    console.log("hello world");
+    loadSavedState(function(state) {
     switch (state) {
       case StateEnum.DISABLED:
         setState(StateEnum.DISPLAY);
         break;
       case StateEnum.DISPLAY:
         setState(StateEnum.DISABLED);
-        break;
+        break;   
       default:
         throw 'Invalid state "' + state + '"';
     }
   });
 });
+
+
+chrome.tabs.onUpdated.addListener( function (tabId, changeInfo, tab) {
+  console.log("update called");
+  if (changeInfo.status == 'complete' && tab.active) {
+    console.log("update listener called");
+    if (document.body.innerText.split(' ').length > 10) {
+        setState(StateEnum.DISPLAY);
+        console.log("update called display");
+    }
+    else {
+        setState(StateEnum.DISABLED);
+        console.log("update called disable with ", document.body.innerText.split(' ').length, " which ", document.body.innerText.split(' ').length >10 );
+    }
+  }
+  
+})
+
+
+chrome.tabs.onActivated.addListener(function(activeInfo) {
+  console.log("activation called");
+  if (tab.active) {
+      if (document.body.innerText.split(' ').length > 10) {
+            setState(StateEnum.DISPLAY);
+            console.log("activation called display");
+        }
+        else {
+            setState(StateEnum.DISABLED);
+            console.log("activation called disable");
+        }      
+  }
+
+}); 
+
+
+function getText(){
+    document.body.innerText.split(' ').length;
+}
+
+
 
 chrome.runtime.onStartup.addListener(function() {
   loadSavedState(function(state) { setState(state); });
